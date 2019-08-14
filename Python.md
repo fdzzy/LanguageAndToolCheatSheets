@@ -117,3 +117,32 @@ root = tree.getroot()
 for neighbor in root.iter('neighbor'):
     print(neighbor.attrib)
 ```
+
+# Jupyter Setup
+Refer to https://jupyter-notebook.readthedocs.io/en/stable/public_server.html
+- Setup `virtualenv`
+- Install jupyter
+```bash
+$ pip install jupyter
+```
+- Generate jupyter config:
+```bash
+$ jupyter notebook --generate-config
+```
+The default location for this file is your Jupyter folder located in your home directory:
+
+Windows: C:\Users\USERNAME\.jupyter\jupyter_notebook_config.py
+
+OS X: /Users/USERNAME/.jupyter/jupyter_notebook_config.py
+
+Linux: /home/USERNAME/.jupyter/jupyter_notebook_config.py
+
+- Set password
+```bash
+$ jupyter notebook password # jupyter notebook password will prompt you for your password and record the hashed password in your jupyter_notebook_config.json
+```
+
+- Start jupyter
+```bash
+$ jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --NotebookApp.allow_password_change=False
+```
