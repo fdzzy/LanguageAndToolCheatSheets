@@ -1,3 +1,14 @@
+# System version
+Get ubuntu version
+```bash
+$ lsb_release -a| grep "Release" | awk '{print $2}'
+```
+
+Get Linux kernel version
+```bash
+$ uname -r
+```
+
 # Screen
 Create named screen session
 ```bash
