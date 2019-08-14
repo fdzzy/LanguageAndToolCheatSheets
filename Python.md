@@ -107,6 +107,26 @@ import csv
 df = pd.read_csv(data_path, sep='\t', encoding='utf-8', quoting=csv.QUOTE_NONE, names=["column1", "column2"])
 ```
 
+# Scraping
+Scrapes Python's logo, URL and version number from Wikipedia page:
+```python
+# $ pip3 install requests beautifulsoup4
+import requests
+from bs4 import BeautifulSoup
+url = 'https://en.wikipedia.org/wiki/Python_(programming_language)'
+html = requests.get(url).text
+doc = BeautifulSoup(html, 'html.parser')
+table = doc.find('table', class_='infobox vevent')
+rows = table.find_all('tr')
+link = rows[11].find('a')['href']
+ver = rows[6].find('div').text.split()[0]
+url_i = rows[0].find('img')['src']
+image = requests.get(f'https:{url_i}').content
+with open('test.png', 'wb') as file:
+    file.write(image)
+print(link, ver)
+```
+
 # XML
 Refer to https://docs.python.org/3/library/xml.etree.elementtree.html
 ```python
@@ -117,6 +137,8 @@ root = tree.getroot()
 for neighbor in root.iter('neighbor'):
     print(neighbor.attrib)
 ```
+
+# Flask
 
 # Jupyter Setup
 Refer to https://jupyter-notebook.readthedocs.io/en/stable/public_server.html
