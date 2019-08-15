@@ -1,3 +1,27 @@
+# Freeze graph
+```bash
+python ~/github/tensorflow/tensorflow/python/tools/freeze_graph.py \
+    --input_meta_graph=./tf_models/imdb_lstm.ckpt.meta \
+    --input_checkpoint=./tf_models/imdb_lstm.ckpt \
+    --output_graph=./tf_models/imdb_lstm_tf_frozen.pb \
+    --output_node_names="model_1/logits" \
+    --input_binary=true
+```
+Get model info
+```python
+def get_keras_model_info():
+    model = keras.models.load_model('imdb_lstm_ep_5.h5')
+    node_names = [n.name for n in tf.get_default_graph().as_graph_def().node]
+    print("\n".join(node_names))
+
+def get_tf_model_info():
+    sess = tf.Session()
+    saver = tf.train.import_meta_graph('tf_models/imdb_lstm.ckpt.meta')
+    saver.restore(sess, tf.train.latest_checkpoint('tf_models/'))
+    node_names = [n.name for n in sess.graph.as_graph_def().node]
+    print("\n".join(node_names))
+```
+
 # Show graph in Jupyter
 Refer to https://stackoverflow.com/questions/38189119/simple-way-to-visualize-a-tensorflow-graph-in-jupyter
 ```python
