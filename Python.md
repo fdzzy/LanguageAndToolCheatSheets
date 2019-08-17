@@ -110,8 +110,25 @@ for neighbor in root.iter('neighbor'):
     print(neighbor.attrib)
 ```
 
+## tqdm
+```python
+# regular
+from tqdm import tqdm
+# in jupyter notebook
+from tqdm import tqdm_notebook as tqdm
+
+for _ in tqdm(iterable, total=len(iterable), desc="description"):
+    pass
+```
+
 # Data science
 ## Numpy
+
+## Matplotlib
+```python
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
 
 ## Pandas
 Read TSV
@@ -119,6 +136,30 @@ Read TSV
 import pandas as pd
 import csv
 df = pd.read_csv(data_path, sep='\t', encoding='utf-8', quoting=csv.QUOTE_NONE, names=["column1", "column2"])
+# peek
+df.describe()
+df.head()
+# add a new column based on old column
+df['NewColumn'] = df['column1'].map(str).map(lambda x: x + "new")
+
+# iterate rows
+for row in tqdm(df.itertuples(), total=len(df)):
+    print(row.NewColumn)
+
+# select columns
+df_new = df[['column1', 'column2']]
+
+# output to tsv
+df.to_csv(output_path, index=False, header=False, encoding="utf-8", sep='\t', quoting=csv.QUOTE_NONE)
+
+# select rows using predicates
+df_wav[df_wav['duration'] < 20]
+
+# percentile
+df['Length'].quantile(0.95)
+
+# show histogram
+df_wav['duration'].hist()
 ```
 
 ## Jupyter Setup
@@ -148,6 +189,14 @@ $ jupyter notebook password # jupyter notebook password will prompt you for you
 - Start jupyter
 ```bash
 $ jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --NotebookApp.allow_password_change=False
+```
+
+Auto reload
+```python
+# for auto-reloading external modules
+# see http://stackoverflow.com/questions/1907993/autoreload-of-modules-in-ipython
+%load_ext autoreload
+%autoreload 2
 ```
 
 # NLP
@@ -193,6 +242,67 @@ for entity in doc.ents:
 
 # Multimedia
 ## Audio
+Trim silence
+```python
+from pydub import AudioSegment
+
+def detect_leading_silence(sound, silence_threshold=-50.0, chunk_size=10):
+    '''
+    sound is a pydub.AudioSegment
+    silence_threshold in dB
+    chunk_size in ms
+    iterate over chunks until you find the first one with sound
+    '''
+    trim_ms = 0 # ms
+    while trim_ms < len(sound) and sound[trim_ms:trim_ms+chunk_size].dBFS < silence_threshold:
+        trim_ms += chunk_size
+    return trim_ms
+
+def trim_silence(inputfn, outputfn, format, verbose=True):
+    sound = AudioSegment.from_file(inputfn, format=format)
+    start_trim = detect_leading_silence(sound, silence_threshold=-40)
+    end_trim = detect_leading_silence(sound.reverse())
+    duration = len(sound)
+    original_len = duration / 1000.0
+    new_len = original_len
+    if (start_trim >= duration) or (end_trim <= 0):
+        new_len = 0
+    else:
+        trimmed_sound = sound[start_trim:duration-end_trim]
+        original_len = duration / 1000.0
+        new_len = len(trimmed_sound) / 1000.0
+        trimmed_sound.export(outputfn, format=format)
+    if verbose:
+        print("Before trim: %f (seconds)\nAfter trim: %f (seconds)" % (original_len, new_len))
+    return new_len
+```
+
+Get audio info
+```python
+import soundfile as sf
+def try_voice_info(filename):
+    try:
+        return sf.info(filename)
+    except:
+        return None
+
+df_wav['Info'] = df_wav['Filename'].map(try_voice_info)
+df_wav = df_wav[df_wav['Info'].notnull()].copy()
+
+for col in ['channels', 'duration', 'samplerate', 'endian', 'format', 'format_info', 'subtype', 'subtype_info', 'frames']:
+    df_wav[col] = df_wav['Info'].map(lambda x: getattr(x, col))
+```
+
+Resample
+```python
+import soundfile as sf
+from librosa.core import resample
+
+target_rate = 16000
+data, rate  = sf.read(filename)
+data = resample(data, rate, target_rate)
+sf.write(trainFilename, data, samplerate=target_rate, subtype='PCM_16', format='WAV')
+```
 
 ## Image
 
