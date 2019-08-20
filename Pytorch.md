@@ -265,6 +265,24 @@ with torch.no_grad():
 # Save the model checkpoint
 torch.save(model.state_dict(), 'model.ckpt')
 ```
+
+# Train
+```python
+model = Model()
+model_params = filter(lambda p: p.requires_grad, model.parameters())
+optimizer = torch.optim.Adam(lr=learning_rate, params=model_params)
+scheduler = WarmupLinearSchedule(optimizer, warmup_steps=num_warmup_steps, t_total=num_train_steps)
+
+model.train()
+for batch in train_loader:
+    loss = model(batch)
+    loss.backward()
+    torch.nn.utils.clip_grad_norm_(model_params, max_grad_norm)
+    scheduler.step()
+    optimizer.step()
+    optimizer.zero_grad()
+```
+
 # RNN
 ```python
 class PunctuationModel(nn.Module):
