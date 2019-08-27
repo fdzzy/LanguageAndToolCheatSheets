@@ -148,3 +148,95 @@ Rs1 = EXTRACT a:int, b:int
       FROM @"/my/Tests/out_%h.txt?hour=0...9"
       USING DefaultTextExtractor();
 ```
+
+# Processor
+```csharp
+public class ExampleProcessor : Processor
+{
+    public override Schema Produces(string[] requestedColumns, string[] args, Schema input)
+    {
+        return new Schema(@"QueryA:string,QueryB:string");
+    }
+
+    public override IEnumerable<Row> Process(RowSet input, Row outputRow, string[] args)
+    {
+        foreach (var row in input.Rows)
+        {
+            string QueryA = row[0].String;
+            string ClicksA = row[1].String;
+            string QueryB = row[2].String;
+            string ClicksB = row[3].String;
+
+            if (QueryA == QueryB) continue;
+            if (!IsSimilar(ClicksA, ClicksB)) continue;
+
+            outputRow[0].Set(QueryA);
+            outputRow[1].Set(QueryB);
+
+            yield return outputRow;
+        }
+    }
+}
+
+public class ExampleProcessor2 : Processor
+{
+    public override Schema Produces(string[] columns, string[] args, Schema input)
+    {
+        Schema output = input.Clone();
+        output.Add(new ColumnInfo("NewColumn1", ColumnDataType.String));
+        output.Add(new ColumnInfo("NewColumn2", ColumnDataType.String));
+        return output;
+    }
+
+    public override IEnumerable<Row> Process(RowSet input, Row outputRow, string[] args)
+    {
+        foreach (var row in input.Rows)
+        {
+            row.CopyTo(outputRow);
+            string questions = row["Questions"].String;
+            string answers = row["Answers"].String;
+            outputRow["NewColumn1"].Set(questions);
+            outputRow["NewColumn2"].Set(answers);
+            yield return outputRow;
+        }
+    }
+}
+```
+
+# Reducer
+```csharp
+QALogs = SELECT EventInfo_Time, UserId, Question, Answer FROM InputLogs;
+ReorderQALogs =
+    REDUCE QALogs
+    ON UserId
+    PRODUCE *
+    USING ReorderReducer
+    PRESORT EventInfo_Time ASC;
+
+#CS
+public class ReorderReducer : Reducer
+{
+    public override Schema Produces(string[] requestedColumns, string[] args, Schema input)
+    {
+        return new Schema("PrevQuestion:string,PrevAnswer:string,CurrentQuery:string");
+    }
+
+    public override IEnumerable<Row> Reduce(RowSet input, Row outputRow, string[] args)
+    {
+        string prevQuestion = string.Empty;
+        string prevAnswer = string.Empty;
+        foreach (Row inputRow in input.Rows)
+        {
+            var question = inputRow[2].ToString();
+            var answer = inputRow[3].ToString();
+            outputRow[0].Set(prevQuestion);
+            outputRow[1].Set(prevAnswer);
+            outputRow[2].Set(question);
+            prevQuestion = question;
+            prevAnswer = answer;
+            yield return outputRow;
+        }
+    }
+}
+#ENDCS
+```
