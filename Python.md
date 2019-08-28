@@ -272,6 +272,43 @@ Chunking
 Tree('S', [Tree('GPE', [('Great', 'NNP')]), ('laptop', 'VBZ'), ('that', 'IN'), ('offers', 'VBZ'), ('many', 'JJ'), ('great', 'JJ'), ('features', 'NNS'), ('!', '.')])
 ```
 
+## WordNet
+http://www.nltk.org/howto/wordnet.html
+```python
+from nltk.corpus import wordnet as wn
+wn.synsets('screen')
+wn.synsets('operating_system')
+```
+Synsets
+```python
+>>> dog = wn.synset('dog.n.01')
+>>> dog.hypernyms()
+[Synset('canine.n.02'), Synset('domestic_animal.n.01')]
+>>> dog.hyponyms()  # doctest: +ELLIPSIS
+[Synset('basenji.n.01'), Synset('corgi.n.01'), Synset('cur.n.01'), Synset('dalmatian.n.02'), ...]
+>>> dog.member_holonyms()
+[Synset('canis.n.01'), Synset('pack.n.06')]
+>>> dog.root_hypernyms()
+[Synset('entity.n.01')]
+>>> wn.synset('dog.n.01').lowest_common_hypernyms(wn.synset('cat.n.01'))
+[Synset('carnivore.n.01')]
+```
+Similarity
+```python
+>>> dog = wn.synset('dog.n.01')
+>>> cat = wn.synset('cat.n.01')
+>>> dog.path_similarity(cat)  # doctest: +ELLIPSIS
+0.2...
+>>> hit.path_similarity(slap)  # doctest: +ELLIPSIS
+0.142...
+>>> wn.path_similarity(hit, slap)  # doctest: +ELLIPSIS
+0.142...
+>>> print(hit.path_similarity(slap, simulate_root=False))
+None
+>>> print(wn.path_similarity(hit, slap, simulate_root=False))
+None
+```
+
 ## Spacy
 ```python
 # pip install spacy
