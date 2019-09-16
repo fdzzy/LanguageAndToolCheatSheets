@@ -240,3 +240,11 @@ public class ReorderReducer : Reducer
 }
 #ENDCS
 ```
+
+# Random select rows
+```sql
+// add random id
+SELECT *, Guid.NewGuid().ToString() AS RandomId;
+// keep only a certain amount
+SELECT *, ROW_NUMBER() OVER(PARTITION BY Message ORDER BY RandomId) AS RowNumber HAVING RowNumber <= @MaxCount; 
+```
