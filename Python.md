@@ -309,6 +309,21 @@ Chunking
 Tree('S', [Tree('GPE', [('Great', 'NNP')]), ('laptop', 'VBZ'), ('that', 'IN'), ('offers', 'VBZ'), ('many', 'JJ'), ('great', 'JJ'), ('features', 'NNS'), ('!', '.')])
 ```
 
+NLTK Stanford Parser
+```python
+from nltk.parse.stanford import StanfordDependencyParser
+
+path_to_jar = '/mnt/e/software/stanford-parser-full-2018-10-17/stanford-parser.jar'
+path_to_models_jar = '/mnt/e/software/stanford-parser-full-2018-10-17/stanford-parser-3.9.2-models.jar'
+
+dependency_parser = StanfordDependencyParser(path_to_jar=path_to_jar, path_to_models_jar=path_to_models_jar, java_options=' -mx4G')
+
+sentences = ['They have nice dessert', 'Its camera is great.', 'I love their fries.', 'iPhone is the best cellphone.', 'I like Indian food.', 'Their spring roll is great.']
+
+for sent in sentences:
+    print([list(parse.triples()) for parse in dependency_parser.raw_parse(sent)])
+```
+
 ## WordNet
 http://www.nltk.org/howto/wordnet.html
 ```python
@@ -462,6 +477,9 @@ import requests
 
 data = open('voice.wav', 'rb').read()
 res = requests.post(url='https://example.com/api/audio/classify', data=data, headers={'Content-Type': 'application/octet-stream'})
+
+url = 'https://en.wikipedia.org/wiki/Python_(programming_language)'
+html = requests.get(url).text
 ```
 
 ## Scraping
