@@ -344,3 +344,12 @@ class PunctuationModel(nn.Module):
 ```python
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 ```
+
+# Number of Parameters
+```python
+def _tally_parameters(model):
+    n_params = 0
+    for name, param in model.named_parameters():
+        n_params += param.nelement()
+    return n_params
+```
