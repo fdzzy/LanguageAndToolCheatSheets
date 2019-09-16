@@ -46,6 +46,43 @@ for k,v in sorted(<dict>.items(), key=lambda kv: (kv[1], kv[0]), reverse=True):
     print(k, v)
 ```
 
+## Date time
+```python
+from datetime import datetime
+from datetime import date
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
+
+today = date.today()
+now = datetime.now()
+date(2019, 9, 1)
+
+now.strftime('%Y%m') # '201909'
+now + timedelta(days=1, hours=8, minutes=15)
+today + relativedelta(months=+1)
+```
+
+## Object Equality
+```python
+class MyClass:
+    def __init__(self, foo, bar):
+        self.foo = foo
+        self.bar = bar
+
+    def __eq__(self, other): 
+        if not isinstance(other, MyClass):
+            # don't attempt to compare against unrelated types
+            return NotImplemented
+        return self.foo == other.foo and self.bar == other.bar
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        # necessary for instances to behave sanely in dicts and sets.
+        return hash((self.foo, self.bar))
+```
+
 ## Counter
 ```python
 >>> from collections import Counter
@@ -335,6 +372,20 @@ print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
 # Find named entities, phrases and concepts
 for entity in doc.ents:
     print(entity.text, entity.label_)
+```
+
+### Dependency parsing
+https://spacy.io/usage/linguistic-features#dependency-parse
+
+https://explosion.ai/demos/displacy
+```python
+import spacy
+
+nlp = spacy.load("en_core_web_sm")
+doc = nlp(u"Autonomous cars shift insurance liability toward manufacturers")
+for token in doc:
+    print(token.text, token.dep_, token.head.text, token.head.pos_,
+            [child for child in token.children])
 ```
 
 # Multimedia
