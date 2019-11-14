@@ -62,6 +62,17 @@ now + timedelta(days=1, hours=8, minutes=15)
 today + relativedelta(months=+1)
 ```
 
+## Exception handling
+```python
+try:
+    # some code that might throw exceptions
+    pass
+except Exception as e:
+    print(e)
+finally:
+    pass
+```
+
 ## Object Equality
 ```python
 class MyClass:
