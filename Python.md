@@ -131,6 +131,30 @@ Match Object
 <int>   = <Match>.end()     # Exclusive end index of a match.
 ```
 
+## JSON
+```python
+import json
+# some JSON:
+x =  '{ "name":"John", "age":30, "city":"New York"}'
+# parse x:
+y = json.loads(x)
+# convert into JSON:
+z = json.dumps(y)
+# format the result
+json.dumps(x, indent=4, separators=(". ", " = "))
+
+def read_json_file(filename, encoding='utf-8'):
+    with open(filename, encoding=encoding) as file:
+        return json.load(file)
+
+def write_to_json_file(filename, an_object, encoding='utf-8'):
+    with open(filename, 'w', encoding=encoding) as file:
+        json.dump(an_object, file, ensure_ascii=False, indent=4)
+```
+
+## LRU Cache
+@functools.lru_cache(maxsize=128, typed=False)
+
 ## Multi-processing
 ```python
 from multiprocessing import Pool
@@ -373,6 +397,7 @@ None
 ```
 
 ## Spacy
+https://spacy.io/usage/spacy-101
 ```python
 # pip install spacy
 # python -m spacy download en_core_web_sm
@@ -511,6 +536,10 @@ image = requests.get(f'https:{url_i}').content
 with open('test.png', 'wb') as file:
     file.write(image)
 print(link, ver)
+
+# attribute
+anchors = doc.find_all('a')
+anchors[0].attrs['href']
 ```
 
 ## Selenium
