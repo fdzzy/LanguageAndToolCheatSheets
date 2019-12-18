@@ -23,6 +23,19 @@ Distinct rows
 rs1 = SELECT DISTINCT Region FROM searchLog;
 ```
 
+Grouping and Aggregation
+```sql
+rs1 = SELECT 
+COUNT() AS NumSessions, 
+Region, 
+SUM(Duration) AS TotalDuration, 
+AVG(Duration) AS AvgDwellTtime, 
+MAX(Duration) AS MaxDuration, 
+MIN(Duration) AS MinDuration
+    FROM searchlog
+    GROUP BY Region;
+```
+
 # Regular Expressions
 Finding Simple Patterns
 ```sql
@@ -247,4 +260,9 @@ public class ReorderReducer : Reducer
 SELECT *, Guid.NewGuid().ToString() AS RandomId;
 // keep only a certain amount
 SELECT *, ROW_NUMBER() OVER(PARTITION BY Message ORDER BY RandomId) AS RowNumber HAVING RowNumber <= @MaxCount; 
+```
+
+# Get row number
+```sql
+SELECT *, ROW_NUMBER() OVER() AS RowNumber;
 ```

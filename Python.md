@@ -62,6 +62,22 @@ now + timedelta(days=1, hours=8, minutes=15)
 today + relativedelta(months=+1)
 ```
 
+## Directory and file names
+```python
+>>> import os
+>>> abs_path_name = '/root/path1/path2/filename.0.txt'
+>>> os.path.dirname(abs_path_name)
+'/root/path1/path2'
+>>> os.path.basename(abs_path_name)
+'filename.0.txt'
+>>> os.path.splitext(abs_path_name)
+('/root/path1/path2/filename.0', '.txt')
+>>> os.path.dirname('test.txt')
+''
+>>> os.path.join(os.path.dirname('test.txt'), 'test2.txt')
+'test2.txt'
+```
+
 ## Exception handling
 ```python
 try:
@@ -152,11 +168,50 @@ def write_to_json_file(filename, an_object, encoding='utf-8'):
         json.dump(an_object, file, ensure_ascii=False, indent=4)
 ```
 
+## Argument Parsing
+Using sys.argv
+```python
+import sys
+
+print("the script has the name %s" % (sys.argv[0]))
+# count the arguments
+arguments = len(sys.argv) - 1
+# output argument-wise
+position = 1
+while (arguments >= position):
+    print("parameter %i: %s" % (position, sys.argv[position]))
+    position = position + 1
+```
+
+Using argparse
+```python
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--input_path", default=None, type=str, required=True,
+                    help="The input file.")
+parser.add_argument("--output_path", default=None, type=str, required=True,
+                    help="The output file.")
+parser.add_argument("--n_process", default=0, type=int,
+                    help="Number of processes to run.")
+parser.add_argument("--output_file_ext", default="asc", type=str,
+                    help="If output is a directory, specify the file extension to use for the output files.")
+parser.add_argument("--do_train", action='store_true',
+                    help="Whether to run training.")
+parser.add_argument("--learning_rate", default=5e-5, type=float,
+                    help="The initial learning rate for Adam.")
+args = parser.parse_args()
+if args.do_train:
+    train(args)
+```
+
 ## LRU Cache
 @functools.lru_cache(maxsize=128, typed=False)
 
 ## Multi-processing
 ```python
+import os
+import multiprocessing as mp
 from multiprocessing import Pool
 from functools import partial
 
@@ -169,6 +224,10 @@ def f2(x, num):
 p = Pool(5)
 print(p.map(f, [1, 2, 3]))
 print(p.map(partial(f2, num=2), [1, 2, 3]))
+
+# Get number of processors
+mp.cpu_count()
+os.cpu_count()
 ```
 
 ## XML
