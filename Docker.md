@@ -19,6 +19,9 @@ docker info
 ### Execute Docker image
 ```bash
 docker run hello-world
+docker run -it --gpus all --ipc=host --privileged pytorch/pytorch:1.2-cuda10.0-cudnn7-devel bash
+# Mounts the local folder /localdisk/datasets/ to /home/openvino/workbench/datasets in the container.
+# -v /localdisk/datasets/:/home/openvino/workbench/datasets
 ```
 
 ### List Docker images
@@ -26,11 +29,25 @@ docker run hello-world
 docker image ls
 ```
 
+### Copy
+From host to container
+```bash
+docker cp data docker_id:/to/path/
+```
+
+### Attach to a docker container
+```bash
+docker container attach docker_id_or_name
+# get a shell to a container
+docker container exec -it docker_id_or_name cmd # e.g., 'cmd' could be 'bash'
+```
+
 ### List Docker containers (running, all, all in quiet mode)
 ```bash
 docker container ls
 docker container ls --all
 docker container ls -aq
+docker ps
 ```
 
 ```bash

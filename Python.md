@@ -19,6 +19,14 @@ list2 = ['b', 'c']
 list1.extend(list2) # ['a', 'b', 'c']
 ```
 
+## Character ASCII
+```python
+>>> ord('a')
+97
+>>> chr(ord('a'))
+'a'
+```
+
 ## Dictionary
 
 ```python
@@ -94,6 +102,16 @@ class MyClass:
         return hash((self.foo, self.bar))
 ```
 
+## Encoding
+```python
+# -*- coding: utf-8 -*-
+with open(infile, 'r', encoding='utf-8') as reader:
+    lines = reader.readlines()
+
+with open(outfile, 'w', encoding='utf-8') as writer:
+    writer.write(line)
+```
+
 ## Counter
 ```python
 >>> from collections import Counter
@@ -102,6 +120,25 @@ class MyClass:
 Counter({'blue': 3, 'red': 2, 'yellow': 1})
 >>> counter.most_common()[0]
 ('blue', 3)
+```
+
+## Argparse
+```python
+parser = argparse.ArgumentParser()
+parser.add_argument("--input_file", default=None, type=str, required=True,
+                        help="The input file.")
+parser.add_argument("--output_file", default=None, type=str, required=True,
+                        help="The output file.")
+parser.add_argument("--n_process", default=0, type=int,
+                        help="Number of processes to run.")
+parser.add_argument("--debug", action='store_true',
+                        help="debug mode")
+parser.add_argument("--learning_rate", default=5e-5, type=float,
+                        help="The initial learning rate for Adam.")
+parser.add_argument("--outputs", required=True, nargs='+')
+parser.add_argument("--outputs", required=True, nargs='*')
+args = parser.parse_args()
+args, unknown = parser.parse_known_args()
 ```
 
 ## Regex
@@ -158,6 +195,26 @@ for neighbor in root.iter('neighbor'):
     print(neighbor.attrib)
 ```
 
+## JSON
+Text file format for storing collections of strings and numbers.
+```python
+import json
+<str>    = json.dumps(<object>, ensure_ascii=True, indent=None)
+<object> = json.loads(<str>)
+```
+Read Object from JSON file
+```python
+def read_json_file(filename):
+    with open(filename, encoding='utf-8') as file:
+        return json.load(file)
+```
+Write Object to JSON file
+```python
+def write_to_json_file(filename, an_object):
+    with open(filename, 'w', encoding='utf-8') as file:
+        json.dump(an_object, file, ensure_ascii=False, indent=4)
+```
+
 ## tqdm
 ```python
 # regular
@@ -167,6 +224,82 @@ from tqdm import tqdm_notebook as tqdm
 
 for _ in tqdm(iterable, total=len(iterable), desc="description"):
     pass
+```
+Manual control of tqdm() updates:
+```python
+with tqdm(total=100) as pbar:
+    for i in range(10):
+        sleep(0.1)
+        pbar.update(10)
+
+with tqdm() as pbar:
+    for i in range(10):
+        sleep(0.1)
+        pbar.update()
+
+pbar = tqdm(total=100)
+for i in range(10):
+    sleep(0.1)
+    pbar.update(10)
+pbar.close()
+```
+
+## Queue
+```python
+>>> from queue import Queue
+>>> a = Queue()
+>>> a.put(1)
+>>> a.put(2)
+>>> a.put(3)
+>>> a.get()
+1
+>>> a.empty()
+False
+>>> a.qsize()
+2
+>>> a.get_nowait()
+2
+
+import threading, queue
+
+q = queue.Queue()
+
+def worker():
+    while True:
+        item = q.get()
+        print(f'Working on {item}')
+        print(f'Finished {item}')
+        q.task_done()
+
+# turn-on the worker thread
+threading.Thread(target=worker, daemon=True).start()
+
+# send thirty task requests to the worker
+for item in range(30):
+    q.put(item)
+print('All task requests sent\n', end='')
+
+# block until all tasks are done
+q.join()
+print('All work completed')
+```
+
+## Priority Queue
+```python
+>>> from queue import PriorityQueue
+>>> a = PriorityQueue()
+>>> a.put(2)
+>>> a.put(3)
+>>> a.put(1)
+>>> a.put(10)
+>>> a.get()
+1
+>>> a.empty()
+False
+>>> a.qsize()
+3
+>>> a.get()
+2
 ```
 
 # Data science
@@ -208,6 +341,9 @@ df['Length'].quantile(0.95)
 
 # show histogram
 df_wav['duration'].hist()
+
+# value counts
+df['column1'].value_counts()
 ```
 
 ## Scikit-learn

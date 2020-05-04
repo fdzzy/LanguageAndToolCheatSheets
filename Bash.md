@@ -108,6 +108,7 @@ $ screen -ls
 Restore session:
 ```bash
 $ screen -r [id of session]
+$ screen -d -r [id of session] # force to attach to a session
 ```
 
 Detach from session:

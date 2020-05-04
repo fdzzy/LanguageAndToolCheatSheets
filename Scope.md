@@ -1,5 +1,20 @@
 # Basics
 
+Declare constants
+```sql
+#IF(LOCAL)
+    RESOURCE @"\\lsstc164\DataRepo\SharedDLLs\BingSocialDataAlias.txt";
+    REFERENCE @"\\lsstc164\DataRepo\SharedDLLs\Microsoft.Live.Json.dll";
+    #DECLARE inputStream string = @"C:\data\conversation_2016.0811_0817.ss";
+#ELSE
+    RESOURCE @"/local/ChatSources/scoretables/BingSocialDataAlias.txt";
+    REFERENCE @"/shares/searchDM/distrib/released/SearchLogExtractor/Microsoft.Live.Json.dll";
+    #DECLARE inputStream string = @"/local/TopicChat/DataCoverageAndAlias/conversation_2016.0811_0817.ss";
+#ENDIF
+
+Input = SSTREAM @inputStream;
+```
+
 Extraction
 ```sql
 rs0 = EXTRACT 
@@ -62,6 +77,13 @@ rs2 =
         SplitUrls AS Url
     FROM  rs1
     CROSS APPLY Urls.Split(';') AS SplitUrls;
+
+rs3 = 
+    SELECT 
+        Region, 
+        string.Join(";" , LIST(Url).ToArray() ) AS Urls
+    FROM rs2
+    GROUP BY Region;
 ```
 
 # Stream Set
