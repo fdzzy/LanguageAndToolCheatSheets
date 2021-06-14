@@ -1,3 +1,18 @@
+# Basic Operations
+Concatenation
+```python
+result = tf.concat(tensors, 1) # 1 is the dimension to concatenate
+```
+
+# Check saved checkpoint variables
+```python
+>>> import tensorflow as tf
+>>> init_checkpoint = './bert_model.ckpt'
+>>> init_vars = tf.train.list_variables(init_checkpoint)
+>>> sess = tf.Session()
+>>> print(init_vars)
+```
+
 # Freeze graph
 ```bash
 python ~/github/tensorflow/tensorflow/python/tools/freeze_graph.py \

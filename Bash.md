@@ -84,6 +84,11 @@ Get Linux kernel version
 $ uname -r
 ```
 
+# Zip and unzip
+```bash
+tar -cvjSf folder_name.tar.bz2 folder_name/
+```
+
 # Rsync
 https://stackoverflow.com/questions/12460279/how-to-keep-two-folders-automatically-synchronized
 ```bash

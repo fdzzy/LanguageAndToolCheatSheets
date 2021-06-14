@@ -10,6 +10,14 @@ var input = "{\"q\":\"Top 10 Deals for Rims 17!\",\"reqId\":\"6ab443fe - 5ed9 - 
 var table = JsonConvert.DeserializeObject<Dictionary<string, string>>(input);
 ```
 
+## Deserialize as dynamic object
+```csharp
+var jsonStr = "{\"Id\": 1, \"Name\": \"biofractal\"}";
+var results = JsonConvert.DeserializeObject<dynamic>(jsonStr);
+var id = results.Id;
+var name = results.Name;
+```
+
 ## Initialization
 ```csharp
 public class HowToDictionaryInitializer

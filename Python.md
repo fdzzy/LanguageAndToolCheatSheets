@@ -203,6 +203,11 @@ def read_json_file(filename, encoding='utf-8'):
 def write_to_json_file(filename, an_object, encoding='utf-8'):
     with open(filename, 'w', encoding=encoding) as file:
         json.dump(an_object, file, ensure_ascii=False, indent=4)
+
+def json_beautify(infile, outfile, indent):
+    with open(infile, 'r', encoding='utf-8') as reader, open(outfile, 'w', encoding='utf-8') as writer:
+        obj = json.load(reader)
+        json.dump(obj, writer, ensure_ascii=False, indent=indent)
 ```
 
 ## Argument Parsing
@@ -365,6 +370,19 @@ print('All task requests sent\n', end='')
 # block until all tasks are done
 q.join()
 print('All work completed')
+
+>>> from collections import deque
+>>> queue = deque([1,2])
+>>> queue.popleft()
+1
+>>> queue
+deque([2])
+>>> queue.append(3)
+>>> queue
+deque([2, 3])
+>>> len(queue)
+2
+
 ```
 
 ## Priority Queue
@@ -790,3 +808,33 @@ class Scraper:
 ```
 
 ## Flask
+
+## Custom code
+
+```python
+class Writer:
+    def __init__(self, file, encoding='utf-8'):
+        self.file = file
+        self.encoding = encoding
+        self.writer = None
+    
+    def __enter__(self):
+        self.writer = open(self.file, 'w', encoding=self.encoding)
+        return self.writer
+
+    def __exit__(self, type, value, traceback):
+        if self.writer is not None:
+            self.writer.close()
+
+class TimedBlock:
+    def __init__(self, name):
+        self.name = name
+    
+    def __enter__(self):
+        print(f'Start running block {self.name}...')
+        self.start = time.time()
+
+    def __exit__(self, type, value, traceback):
+        end = time.time()
+        print(f'Finished running block {self.name} in {end - self.start} seconds!')
+```
