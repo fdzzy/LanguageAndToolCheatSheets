@@ -445,6 +445,10 @@ df_wav['duration'].hist()
 
 # value counts
 df['column1'].value_counts()
+
+# concatenate two columns
+df = pd.read_csv('data.tsv', sep='\t', names=['query', 'lang', 'category'])
+df.apply(lambda row: str(row.lang) + "_" + str(row.category), axis=1).value_counts()
 ```
 
 ## Scikit-learn

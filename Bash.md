@@ -87,6 +87,23 @@ $ uname -r
 # Zip and unzip
 ```bash
 tar -cvjSf folder_name.tar.bz2 folder_name/
+
+tar -czvf name-of-archive.tar.gz /path/to/directory-or-file
+tar -czvf archive.tar.gz /home/ubuntu/Downloads /usr/local/stuff /home/ubuntu/Documents/notes.txt
+tar -cjvf archive.tar.bz2 stuff
+```
+
+# Find and proces
+```bash
+find ./ -name "*.txt" -exec grep {} ";"
+find ./ -name "*.txt" | xargs grep {} ";"
+# upload a bunch of files to aws s3
+find ./ -name "*.txt" -exec aws s3 cp {} s3://some_s3_path ";"
+```
+
+# Remove certain files on aws s3
+```bash
+aws s3 ls s3://some_folder | grep some_text | awk '{print $4}' | xargs -I% bash -c 'aws s3 rm s3://some_folder/%'
 ```
 
 # Rsync
@@ -124,6 +141,8 @@ Ctrl a + d
 Kill a session:
 ```
 Ctrl a + k
+or
+$ screen -XS <session-id> quit
 ```
 
 # TMUX
