@@ -59,6 +59,26 @@ for ((i = 0 ; i < 100 ; i++)); do
 done
 ```
 
+# switch
+case $COUNTRY in
+
+  Lithuania)
+    echo -n "Lithuanian"
+    ;;
+
+  Romania | Moldova)
+    echo -n "Romanian"
+    ;;
+
+  Italy | "San Marino" | Switzerland | "Vatican City")
+    echo -n "Italian"
+    ;;
+
+  *)
+    echo -n "unknown"
+    ;;
+esac
+
 Functions
 ```bash
 myfunc() {

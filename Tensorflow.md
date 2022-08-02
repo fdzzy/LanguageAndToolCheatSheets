@@ -1,3 +1,21 @@
+# TF2 keras save/load model
+```python
+# save model
+model.save(model_path)
+# model_path will have
+# - assets (directory)
+# - variables (directory)
+# - save_model.pb (file)
+
+# load model
+model = tf.keras.models.load_model(model_path)
+model.summary()
+# list of model weights
+model.weights
+# model weight names
+[x.name for x in model.weights]
+```
+
 # Basic Operations
 Concatenation
 ```python

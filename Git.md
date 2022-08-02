@@ -48,6 +48,26 @@ $ git reset --soft HEAD~1
 $ git reset --hard HEAD~1
 ```
 
+Abort git merge
+```bash
+$ git merge master
+# now there is conflicts
+$ git merge --abort
+```
+
+git rebase workflow
+```bash
+$ git checkout feature_branch
+$ git rebase -i master # -i for interactive rebase
+# if there is conflicts, fix conflicts
+$ git rebase --abort # to abort rebase
+
+$ git add/rm <conflicted_files>
+$ git rebase --continue # to continue rebase if conflicts resolved
+
+$ git push origin feature_branch --force # need to add --force to force push to github
+```
+
 # Fetch upstream
 ```bash
 # make sure you are tracking upstream branch
@@ -66,7 +86,7 @@ $ git push origin master
 # Fetch branch on someone else's fork
 ```bash
 $ git remote add theirUsername git@github.com:theirUsername/repoName.git
-$ git fetch theirUsername
+$ git fetch theirUsername theirBranch
 $ git checkout -b myNameForTheirBranch theirUsername/theirBranch
 ```
 
